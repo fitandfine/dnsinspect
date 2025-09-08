@@ -1,0 +1,30 @@
+
+=== DNS Inspection for scanepal.com ===
+
+[A]
+  TTL=300  104.21.21.5
+  TTL=300  172.67.195.69
+[AAAA]
+  TTL=300  2606:4700:3035::ac43:c345
+  TTL=300  2606:4700:3033::6815:1505
+[CNAME]
+  (no records)
+[MX]
+  TTL=300  65535 _dc-mx.ae10c4c505fa.scanepal.com.
+[NS]
+  TTL=86400  micah.ns.cloudflare.com.
+  TTL=86400  serena.ns.cloudflare.com.
+[SOA]
+  TTL=1800  micah.ns.cloudflare.com. dns.cloudflare.com. 2381431191 10000 2400 604800 1800
+[TXT]
+  TTL=300  "v=spf1 +a +mx +ip4:192.168.168.2 ~all"
+[CAA]
+  (no records)
+[_dmarc.scanepal.com.TXT]
+  ERROR: NXDOMAIN
+
+=== Diagnostics ===
+- Missing DMARC: Add TXT record for _dmarc.scanepal.com
+Explanation: No DMARC policy found.
+
+

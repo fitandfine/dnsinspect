@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
+"""
+DNS Inspector Pro - Enhanced Version
+------------------------------------
+A GUI tool to inspect DNS records for a domain, run diagnostics,
+and fetch results in real-time with user-friendly output.
+"""
+
 import tkinter as tk
 from tkinter import ttk, scrolledtext, filedialog, messagebox
 import dns.resolver
-import dns.exception
 import threading
 import time
 import os
+import queue
 
+# Supported record types
 RECORD_TYPES = ["A", "AAAA", "CNAME", "MX", "NS", "SOA", "TXT", "CAA"]
 EXTRA_CHECKS = ["_dmarc"]
 
+# Thread-safe queue for bulk results
+bulk_queue = queue.Queue()
+
 def build_resolver(server=None, verbose=False):
+    """Builds a DNS resolver, optionally using a custom server."""
     resolver = dns.resolver.Resolver()
     if server:
         resolver.nameservers = [server]
@@ -19,6 +31,7 @@ def build_resolver(server=None, verbose=False):
     return resolver
 
 def query_record(resolver, domain, rtype, verbose=False):
+    """Queries a DNS record of given type for a domain."""
     try:
         if verbose:
             print(f"[DEBUG] Querying {rtype} for {domain}")
@@ -27,11 +40,7 @@ def query_record(resolver, domain, rtype, verbose=False):
         if answers.rrset:
             ttl = answers.rrset.ttl
             for rdata in answers:
-                results.append({
-                    "type": rtype,
-                    "ttl": ttl,
-                    "value": str(rdata)
-                })
+                results.append({"type": rtype, "ttl": ttl, "value": str(rdata)})
         return results
     except dns.resolver.NoAnswer:
         return []
@@ -43,6 +52,7 @@ def query_record(resolver, domain, rtype, verbose=False):
         return [{"type": rtype, "error": str(e)}]
 
 def get_authoritative_nameservers(domain):
+    """Gets authoritative nameservers for a domain."""
     try:
         ns_records = dns.resolver.resolve(domain, 'NS')
         return [str(r.target).strip(".") for r in ns_records]
@@ -50,6 +60,7 @@ def get_authoritative_nameservers(domain):
         return []
 
 def diagnostics(domain, results):
+    """Runs diagnostic checks and returns issues."""
     issues = []
     explanations = {
         "Missing apex A/AAAA": "No IP address records found for the root domain.",
@@ -150,7 +161,18 @@ class DNSInspectorApp:
         self.output = scrolledtext.ScrolledText(root, wrap="word", height=25)
         self.output.pack(fill="both", expand=True, padx=10, pady=5)
 
+        # Progress bar for bulk queries
+        self.progress = ttk.Progressbar(root, orient="horizontal", length=400, mode="determinate")
+        self.progress.pack(fill="x", padx=10, pady=5)
+
+        # Poll the queue periodically for results from threads
+        self.root.after(500, self.process_bulk_queue)
+
+        # Safe exit
+        self.root.protocol("WM_DELETE_WINDOW", self.on_exit)
+
     def run_once(self):
+        """Runs inspection once, optionally auto-refreshing."""
         domain = self.domain_var.get().strip(".")
         if not domain:
             self.log("Enter a domain.\n", "error")
@@ -162,7 +184,8 @@ class DNSInspectorApp:
             threading.Thread(target=self.auto_refresh, args=(domain, interval), daemon=True).start()
 
     def run_inspection(self, domain):
-        self.log(f"=== DNS Inspection for {domain} ===\n\n", "header")
+        """Performs DNS inspection and logs results."""
+        self.log(f"\n=== DNS Inspection for {domain} ===\n\n", "header")
         resolver = build_resolver(verbose=self.var_verbose.get())
         if self.var_authoritative.get():
             ns_hosts = get_authoritative_nameservers(domain)
@@ -194,6 +217,7 @@ class DNSInspectorApp:
                 self.log(f"- {title}: {fix}\nExplanation: {expl}\n\n", "warn")
 
     def auto_refresh(self, domain, interval):
+        """Keeps refreshing inspection at interval seconds."""
         self.stop_refresh.clear()
         while not self.stop_refresh.is_set():
             time.sleep(interval)
@@ -201,27 +225,67 @@ class DNSInspectorApp:
             self.run_inspection(domain)
 
     def stop_auto_refresh(self):
+        """Stops auto-refresh loop."""
         self.stop_refresh.set()
 
     def save_output(self):
+        """Saves current output to file."""
         file_path = filedialog.asksaveasfilename(defaultextension=".txt")
         if file_path:
+            if os.path.exists(file_path):
+                if not messagebox.askyesno("Overwrite?", f"{file_path} exists. Overwrite?"):
+                    return
             with open(file_path, "w") as f:
                 f.write(self.output.get("1.0", tk.END))
             self.log(f"Output saved to {file_path}\n", "ok")
 
     def load_bulk(self):
+        """Loads domains from file and queries them asynchronously."""
         file_path = filedialog.askopenfilename()
         if file_path and os.path.isfile(file_path):
             with open(file_path) as f:
                 domains = [line.strip() for line in f if line.strip()]
-            messagebox.showinfo("Bulk Domains Loaded", "\n".join(domains))
-            self.domain_var.set("")  # clear input field
+            self.progress["maximum"] = len(domains)
+            self.progress["value"] = 0
             for domain in domains:
-                self.output.insert(tk.END, f"\n=== Bulk: {domain} ===\n", "header")
-                self.run_inspection(domain)
+                threading.Thread(target=self.run_bulk_domain, args=(domain,), daemon=True).start()
+
+    def run_bulk_domain(self, domain):
+        """Runs inspection for a single domain and pushes result to queue."""
+        from io import StringIO
+        buffer = StringIO()
+        resolver = build_resolver()
+        results = {}
+        for rtype in RECORD_TYPES:
+            results[rtype] = query_record(resolver, domain, rtype)
+        for sub in EXTRA_CHECKS:
+            fqdn = f"{sub}.{domain}"
+            results[fqdn + ".TXT"] = query_record(resolver, fqdn, "TXT")
+        bulk_queue.put((domain, results))
+
+    def process_bulk_queue(self):
+        """Processes results from background threads."""
+        try:
+            while True:
+                domain, results = bulk_queue.get_nowait()
+                self.log(f"\n=== Bulk: {domain} ===\n", "header")
+                for rtype, recs in results.items():
+                    self.log(f"[{rtype}]\n", "section")
+                    if not recs:
+                        self.log("  (no records)\n")
+                    for rec in recs:
+                        if "error" in rec:
+                            self.log(f"  ERROR: {rec['error']}\n", "error")
+                        elif "value" in rec:
+                            self.log(f"  TTL={rec.get('ttl')}  {rec['value']}\n")
+                self.progress["value"] += 1
+        except queue.Empty:
+            pass
+        finally:
+            self.root.after(500, self.process_bulk_queue)
 
     def search_text(self):
+        """Highlights text matches in output."""
         target = self.search_var.get()
         self.output.tag_remove("search", "1.0", tk.END)
         if target:
@@ -236,6 +300,7 @@ class DNSInspectorApp:
             self.output.tag_config("search", background="yellow", foreground="black")
 
     def log(self, text, style=None):
+        """Appends text with optional style to output box."""
         tag = None
         if style and style not in self.output.tag_names():
             colors = {
@@ -250,6 +315,11 @@ class DNSInspectorApp:
             tag = style
         self.output.insert(tk.END, text, tag)
         self.output.see(tk.END)
+
+    def on_exit(self):
+        """Graceful shutdown."""
+        self.stop_auto_refresh()
+        self.root.destroy()
 
 if __name__ == "__main__":
     try:
