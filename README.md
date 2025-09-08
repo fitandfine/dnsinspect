@@ -10,10 +10,9 @@ DNS Inspector Pro is a **user-friendly GUI tool** to inspect DNS records of any 
 - Check for **SPF, DMARC, and other important security records** automatically.
 - Run **authoritative nameserver queries** for accurate results.
 - **Bulk domain inspection** with live progress updates.
-- Save results in **TXT or CSV** formats.
+- Save results in **TXT** formats.
 - Search and highlight text in the output window.
 - Auto-refresh inspection for dynamic monitoring.
-- Clear output button for clean workspace during multiple queries.
 - Threaded execution ensures GUI **does not freeze during bulk queries**.
 
 ---
@@ -77,18 +76,18 @@ DNS Inspector Pro is a **user-friendly GUI tool** to inspect DNS records of any 
      - Missing SPF/DMARC policies
      - Too few nameservers
      - High TTLs slowing propagation
-   - Displays recommendations with explanations.
+   - Displays recommendations with explanations. (minimal)
 
 4. **Bulk Domain Support**
    - Reads domains from a file.
    - Runs each domain in a **separate thread**.
    - Updates results live in the GUI.
-   - Progress bar shows completion percentage.
+   
 
 5. **Output Handling**
    - View results in a scrollable window.
    - Search for keywords in the output.
-   - Save results as **TXT or CSV** for documentation or reporting.
+   - Save results as **TXT** for documentation or reporting.
 
 6. **Auto-refresh**
    - Set a refresh interval to re-query domains automatically.

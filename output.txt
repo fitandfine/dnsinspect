@@ -1,30 +1,137 @@
 
-=== DNS Inspection for scanepal.com ===
-
+=== Bulk: scanepal.com ===
 [A]
-  TTL=300  104.21.21.5
-  TTL=300  172.67.195.69
+  TTL=313  104.21.21.5
+  TTL=313  172.67.195.69
 [AAAA]
-  TTL=300  2606:4700:3035::ac43:c345
-  TTL=300  2606:4700:3033::6815:1505
+  TTL=313  2606:4700:3033::6815:1505
+  TTL=313  2606:4700:3035::ac43:c345
 [CNAME]
   (no records)
 [MX]
-  TTL=300  65535 _dc-mx.ae10c4c505fa.scanepal.com.
+  TTL=313  65535 _dc-mx.ae10c4c505fa.scanepal.com.
 [NS]
-  TTL=86400  micah.ns.cloudflare.com.
-  TTL=86400  serena.ns.cloudflare.com.
+  TTL=2501  micah.ns.cloudflare.com.
+  TTL=2501  serena.ns.cloudflare.com.
 [SOA]
-  TTL=1800  micah.ns.cloudflare.com. dns.cloudflare.com. 2381431191 10000 2400 604800 1800
+  TTL=679  micah.ns.cloudflare.com. dns.cloudflare.com. 2381431191 10000 2400 604800 1800
 [TXT]
-  TTL=300  "v=spf1 +a +mx +ip4:192.168.168.2 ~all"
+  TTL=313  "v=spf1 +a +mx +ip4:192.168.168.2 ~all"
 [CAA]
   (no records)
 [_dmarc.scanepal.com.TXT]
   ERROR: NXDOMAIN
 
-=== Diagnostics ===
-- Missing DMARC: Add TXT record for _dmarc.scanepal.com
-Explanation: No DMARC policy found.
+=== Bulk: github.com ===
+[A]
+  TTL=35  4.237.22.38
+[AAAA]
+  (no records)
+[CNAME]
+  (no records)
+[MX]
+  TTL=2929  10 alt3.aspmx.l.google.com.
+  TTL=2929  10 alt4.aspmx.l.google.com.
+  TTL=2929  5 alt2.aspmx.l.google.com.
+  TTL=2929  5 alt1.aspmx.l.google.com.
+  TTL=2929  1 aspmx.l.google.com.
+[NS]
+  TTL=1127  dns3.p08.nsone.net.
+  TTL=1127  dns4.p08.nsone.net.
+  TTL=1127  ns-1283.awsdns-32.org.
+  TTL=1127  ns-1707.awsdns-21.co.uk.
+  TTL=1127  ns-421.awsdns-52.com.
+  TTL=1127  ns-520.awsdns-01.net.
+  TTL=1127  dns1.p08.nsone.net.
+  TTL=1127  dns2.p08.nsone.net.
+[SOA]
+  TTL=2929  dns1.p08.nsone.net. hostmaster.nsone.net. 1656468023 43200 7200 1209600 3600
+[TXT]
+  TTL=991  "jamf-site-verification=XtaPNIYghF_e_xRDI8CjgQ"
+  TTL=991  "MS=ms58704441"
+  TTL=991  "calendly-site-verification=at0DQARi7IZvJtXQAWhMqpmIzpvoBNF7aam5VKKxP"
+  TTL=991  "krisp-domain-verification=ZlyiK7XLhnaoUQb2hpak1PLY7dFkl1WE"
+  TTL=991  "loom-site-verification=f3787154f1154b7880e720a511ea664d"
+  TTL=991  "MS=ms44452932"
+  TTL=991  "apple-domain-verification=RyQhdzTl6Z6x8ZP4"
+  TTL=991  "docusign=087098e3-3d46-47b7-9b4e-8a23028154cd"
+  TTL=991  "MS=6BF03E6AF5CB689E315FB6199603BABF2C88D805"
+  TTL=991  "facebook-domain-verification=39xu4jzl7roi7x0n93ldkxjiaarx50"
+  TTL=991  "google-site-verification=UTM-3akMgubp6tQtgEuAkYNYLyYAvpTnnSrDMWoDR3o"
+  TTL=991  "shopify-verification-code=t1YPwcmvnxZyBycaCpk1MPyWoFs72o"
+  TTL=991  "miro-verification=d2e174fdb00c71e0bcf58f8e58c3da2dd80dcfa9"
+  TTL=991  "atlassian-domain-verification=jjgw98AKv2aeoYFxiL/VFaoyPkn3undEssTRuMg6C/3Fp/iqhkV4HVV7WjYlVeF8"
+  TTL=991  "v=spf1 ip4:192.30.252.0/22 include:_netblocks.google.com include:_netblocks2.google.com include:_netblocks3.google.com include:spf.protection.outlook.com include:mail.zendesk.com include:_spf.salesforce.com include:servers.mcsv.net include:mktomail.com ip" "4:62.253.227.114 ip4:166.78.69.169 ip4:166.78.69.170 ip4:166.78.71.131 ip4:167.89.101.2 ip4:167.89.101.192/28 ip4:192.254.112.60 ip4:192.254.112.98/31 ip4:192.254.113.10 ip4:192.254.113.101 ip4:192.254.114.176  ~all"
+  TTL=991  "adobe-idp-site-verification=b92c9e999aef825edc36e0a3d847d2dbad5b2fc0e05c79ddd7a16139b48ecf4b"
+  TTL=991  "google-site-verification=82Le34Flgtd15ojYhHlGF_6g72muSjamlMVThBOJpks"
+  TTL=991  "stripe-verification=f88ef17321660a01bab1660454192e014defa29ba7b8de9633c69d6b4912217f"
+[CAA]
+  TTL=2929  0 issue "digicert.com"
+  TTL=2929  0 issue "globalsign.com"
+  TTL=2929  0 issue "sectigo.com"
+  TTL=2929  0 issuewild "digicert.com"
+  TTL=2929  0 issuewild "sectigo.com"
+[_dmarc.github.com.TXT]
+  TTL=377  "v=DMARC1; p=reject; pct=100; rua=mailto:dmarc@github.com"
 
+=== Bulk: google.com ===
+[A]
+  TTL=372  142.250.71.78
+[AAAA]
+  TTL=85  2404:6800:4006:80b::200e
+[CNAME]
+  (no records)
+[MX]
+  TTL=377  10 smtp.google.com.
+[NS]
+  TTL=2929  ns3.google.com.
+  TTL=2929  ns2.google.com.
+  TTL=2929  ns1.google.com.
+  TTL=2929  ns4.google.com.
+[SOA]
+  TTL=64  ns1.google.com. dns-admin.google.com. 803391560 900 900 1800 60
+[TXT]
+  TTL=992  "MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB"
+  TTL=992  "globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8="
+  TTL=992  "facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95"
+  TTL=992  "google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o"
+  TTL=992  "onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef"
+  TTL=992  "cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b"
+  TTL=992  "docusign=1b0a6754-49b1-4db5-8540-d2c12664b289"
+  TTL=992  "google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0"
+  TTL=992  "apple-domain-verification=30afIBcvSuDV2PLX"
+  TTL=992  "v=spf1 include:_spf.google.com ~all"
+  TTL=992  "docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e"
+  TTL=992  "google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ"
+[CAA]
+  TTL=2929  0 issue "pki.goog"
+[_dmarc.google.com.TXT]
+  TTL=377  "v=DMARC1; p=reject; rua=mailto:mailauth-reports@google.com"
+
+=== Bulk: sitehost.co.nz ===
+[A]
+  TTL=377  120.138.23.6
+[AAAA]
+  TTL=377  2403:7000:4000:100::6
+[CNAME]
+  (no records)
+[MX]
+  TTL=377  10 mx3.ext.sitehost.co.nz.
+[NS]
+  TTL=377  ns2.sitehost.co.nz.
+  TTL=377  ns3.sitehost.co.nz.
+  TTL=377  ns1.sitehost.co.nz.
+[SOA]
+  TTL=377  ns1.sitehost.co.nz. soa.sitehost.co.nz. 2025081800 10800 3600 1209600 300
+[TXT]
+  TTL=377  "google-site-verification=qCozEc9zi1xI-48SMbUAlb-_G0ymud3e2M-VDqpNJ1k"
+  TTL=377  "MS=E4F03C899475CFE155705E965CE04DCCBBCF5125"
+  TTL=377  "3c8x3szh216hkrgsh2h61d5t6zzpybd0"
+  TTL=377  "fgfd0v7nrpzzgwdyr6rr89wz35jqjj8m"
+  TTL=377  "google-site-verification=AmTKkrTiREnM2TIhKZytlTkr0s8a8KYgiPXXAho5lVg"
+  TTL=377  "v=spf1 a mx include:_spf.sitehost.co.nz include:_spf.myorderbox.com ~all"
+[CAA]
+  (no records)
+[_dmarc.sitehost.co.nz.TXT]
+  TTL=377  "v=DMARC1; p=none; rua=mailto:dmarc@sitehost.co.nz; sp=none; aspf=s;"
 
